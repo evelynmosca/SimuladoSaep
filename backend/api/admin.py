@@ -1,6 +1,35 @@
 from django.contrib import admin
-from .models import Produto, Usuario, Movimentacao
+from .models import Usuario, Produto, Movimentacao
+from django.contrib.auth.admin import UserAdmin
 
-admin.site.register(Produto)
-admin.site.register(Usuario)
-admin.site.register(Movimentacao)
+class UsuarioAdmin(UserAdmin):
+    model = Usuario
+    list_display = ("login", "nome", "is_staff", "is_active")
+    list_filter = ("is_staff", "is_active")
+    fieldsets = (
+        (None, {"fields": ("login", "password")}),
+        ("Informações pessoais", {"fields": ("nome",)}),
+        ("Permissões", {"fields": ("is_staff", "is_superuser", "is_active", "groups", "user_permissions")}),
+    )
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": ("login", "nome", "password1", "password2", "is_staff", "is_superuser"),
+        }),
+    )
+    search_fields = ("login", "nome")
+    ordering = ("login",)
+
+
+admin.site.register(Usuario, UsuarioAdmin)
+
+@admin.register(Produto)
+class ProdutoAdmin(admin.ModelAdmin):
+    list_display = ("id_produto", "nome", "estoque_atual", "estoque_minimo")
+    search_fields = ("nome",)
+
+@admin.register(Movimentacao)
+class MovimentacaoAdmin(admin.ModelAdmin):
+    list_display = ("id_movimentacao", "produto", "usuario", "tipo", "quantidade", "data_mov")
+    list_filter = ("tipo", "data_mov")
+    search_fields = ("produto__nome", "usuario__login")

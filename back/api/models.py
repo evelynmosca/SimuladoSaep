@@ -43,7 +43,9 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 class Produto(models.Model):
     nome = models.CharField(max_length=255)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
-    estoque = models.IntegerField()
+    descricao = models.TextField()
+    estoque_atual = models.IntegerField()
+    estoque_minimo = models.IntegerField()
 
     class Meta:
         db_table = "produtos"

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "../styles/movimentacao.css";
+import "../styles/movimentacoes.css";
 
 function Movimentacao() {
   const [dados, setDados] = useState([]);
@@ -7,18 +7,16 @@ function Movimentacao() {
   const [tipo, setTipo] = useState("Entrada");
   const [qtd, setQtd] = useState("");
 
-  // 🔥 buscar dados do backend
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/movimentacao/")
+    fetch("http://127.0.0.1:8000/api/movimentacoes/")
       .then(res => res.json())
       .then(data => setDados(data));
   }, []);
 
-  // 🔥 enviar movimentação
   function cadastrar(e) {
     e.preventDefault();
 
-    fetch("http://127.0.0.1:8000/movimentacao/", {
+    fetch("http://127.0.0.1:8000/api/movimentacoes/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -31,7 +29,7 @@ function Movimentacao() {
     })
     .then(() => {
       alert("Movimentação cadastrada!");
-      window.location.reload(); // simples pra atualizar
+      window.location.reload();
     });
   }
 

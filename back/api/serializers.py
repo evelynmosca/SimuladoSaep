@@ -10,7 +10,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
 class ProdutoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produto
-        fields = ["id", "nome", "preco", "estoque"]
+        fields = ["id", "nome", "preco", "descricao", 'estoque_atual','estoque_minimo']
 
 
 class MovimentacaoSerializer(serializers.ModelSerializer):

@@ -1,14 +1,26 @@
 import { useEffect, useState } from "react";
 import "../styles/home.css";
+import axios from "axios";
 
 function Home() {
   const [produtos, setProdutos] = useState([]);
+  const token = localStorage.getItem('token')
+
+  const logar = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/produtos/', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+
+      setProdutos(response.data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/produtos/")
-      .then(res => res.json())
-      .then(data => setProdutos(data))
-      .catch(err => console.log(err));
+    logar()
   }, []);
 
   return (
@@ -20,6 +32,7 @@ function Home() {
           <tr>
             <th>Nome</th>
             <th>Quantidade</th>
+            <th>Tipo</th>
           </tr>
         </thead>
         <tbody>
@@ -27,6 +40,7 @@ function Home() {
             <tr key={i}>
               <td>{p.nome}</td>
               <td>{p.qtd}</td>
+              <td>{p.tipo}</td>
             </tr>
           ))}
         </tbody>

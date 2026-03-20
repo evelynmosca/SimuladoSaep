@@ -4,23 +4,25 @@ import axios from "axios";
 
 function Home() {
   const [produtos, setProdutos] = useState([]);
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token');
 
-  const logar = async () => {
+  const carregarProdutos = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/produtos/', {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      const response = await axios.get(
+        'http://127.0.0.1:8000/api/produtos/',
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
 
-      setProdutos(response.data)
+      setProdutos(response.data);
     } catch (error) {
       console.log(error);
     }
-  }
-
+  };
 
   useEffect(() => {
-    logar()
+    carregarProdutos();
   }, []);
 
   return (
@@ -31,16 +33,19 @@ function Home() {
         <thead>
           <tr>
             <th>Nome</th>
-            <th>Quantidade</th>
-            <th>Tipo</th>
+            <th>Preço</th>
+            <th>Estoque Atual</th>
+            <th>Estoque Mínimo</th>
           </tr>
         </thead>
+
         <tbody>
-          {produtos.map((p, i) => (
-            <tr key={i}>
+          {produtos.map((p) => (
+            <tr key={p.id}>
               <td>{p.nome}</td>
-              <td>{p.qtd}</td>
-              <td>{p.tipo}</td>
+              <td>R$ {p.preco}</td>
+              <td>{p.estoque_atual}</td>
+              <td>{p.estoque_minimo}</td>
             </tr>
           ))}
         </tbody>

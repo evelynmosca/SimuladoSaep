@@ -4,14 +4,25 @@ import "../styles/movimentacoes.css";
 function Movimentacao() {
   const [dados, setDados] = useState([]);
   const [produto, setProduto] = useState("");
-  const [tipo, setTipo] = useState("Entrada");
   const [qtd, setQtd] = useState("");
+  const [produtos, setProdutos] = useState([]);
 
   useEffect(() => {
+    carregarDados();
+    carregarProdutos();
+  }, []);
+
+  function carregarDados() {
     fetch("http://127.0.0.1:8000/api/movimentacoes/")
       .then(res => res.json())
       .then(data => setDados(data));
-  }, []);
+  }
+
+  function carregarProdutos() {
+    fetch("http://127.0.0.1:8000/api/produtos/")
+      .then(res => res.json())
+      .then(data => setProdutos(data));
+  }
 
   function cadastrar(e) {
     e.preventDefault();
@@ -22,14 +33,13 @@ function Movimentacao() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        produto,
-        tipo,
-        qtd
+        produto: Number(produto),
+        quantidade: Number(qtd)
       })
     })
     .then(() => {
       alert("Movimentação cadastrada!");
-      window.location.reload();
+      carregarDados(); // melhor que reload
     });
   }
 
@@ -39,15 +49,15 @@ function Movimentacao() {
 
       {/* FORM */}
       <form onSubmit={cadastrar} className="form">
-        <input
-          type="text"
-          placeholder="Produto"
-          onChange={e => setProduto(e.target.value)}
-        />
 
-        <select onChange={e => setTipo(e.target.value)}>
-          <option>Entrada</option>
-          <option>Saída</option>
+        {/* SELECT PRODUTO */}
+        <select onChange={e => setProduto(e.target.value)}>
+          <option value="">Selecione o produto</option>
+          {produtos.map(p => (
+            <option key={p.id} value={p.id}>
+              {p.nome}
+            </option>
+          ))}
         </select>
 
         <input
@@ -64,17 +74,17 @@ function Movimentacao() {
         <thead>
           <tr>
             <th>Produto</th>
-            <th>Tipo</th>
             <th>Quantidade</th>
+            <th>Data</th>
           </tr>
         </thead>
 
         <tbody>
-          {dados.map((item, index) => (
-            <tr key={index}>
-              <td>{item.produto}</td>
-              <td>{item.tipo}</td>
-              <td>{item.qtd}</td>
+          {dados.map((item) => (
+            <tr key={item.id}>
+              <td>{item.produto_nome}</td>
+              <td>{item.quantidade}</td>
+              <td>{new Date(item.data).toLocaleDateString()}</td>
             </tr>
           ))}
         </tbody>

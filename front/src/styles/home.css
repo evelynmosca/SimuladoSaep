@@ -1,10 +1,12 @@
 .layout {
   display: flex;
+  min-height: 100vh;
+  background: #0f172a;
+  color: #e2e8f0;
 }
 
 .sidebar {
   width: 200px;
-  height: 100vh;
   background: #1e293b;
   padding: 20px;
   display: flex;
@@ -18,10 +20,14 @@
   color: #cbd5f5;
   text-align: left;
   cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: 0.2s;
 }
 
 .sidebar button:hover {
   color: #38bdf8;
+  background: #334155;
 }
 
 .content {
@@ -29,9 +35,38 @@
   padding: 20px;
 }
 
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: #1e293b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+thead {
+  background: #334155;
+}
+
+th {
+  text-align: left;
+  padding: 12px;
+  font-weight: 600;
+}
+
+td {
+  padding: 12px;
+  border-top: 1px solid #334155;
+}
+
+tr:hover {
+  background: #273449;
+}
+
 .cards {
   display: flex;
   gap: 10px;
+  margin-bottom: 20px;
 }
 
 .card {

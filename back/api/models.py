@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from django.db import transaction
-from datetime import date
 
 class UsuarioManager(BaseUserManager):
     use_in_migrations = True
@@ -11,12 +9,7 @@ class UsuarioManager(BaseUserManager):
             raise ValueError("O campo login é obrigatório.")
 
         usuario = self.model(login=login, **extra_fields)
-
-        if password:
-            usuario.set_password(password)
-        else:
-            usuario.set_unusable_password()
-
+        usuario.set_password(password)
         usuario.save(using=self._db)
         return usuario
 
@@ -30,11 +23,11 @@ class UsuarioManager(BaseUserManager):
         return self.create_user(login, password, **extra_fields)
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
-    # id = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=150)
     login = models.CharField(max_length=100, unique=True)
-    senha = models.CharField(max_length=100)
 
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = "login"
     REQUIRED_FIELDS = ["nome"]
@@ -47,13 +40,10 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.login
 
-
 class Produto(models.Model):
-    id_produto = models.AutoField(primary_key=True)
-    nome = models.CharField(max_length=200)
-    descricao = models.TextField(blank=True, null=True)
-    estoque_atual = models.IntegerField(default=0)
-    estoque_minimo = models.IntegerField(default=0)
+    nome = models.CharField(max_length=255)
+    preco = models.DecimalField(max_digits=10, decimal_places=2)
+    estoque = models.IntegerField()
 
     class Meta:
         db_table = "produtos"
@@ -62,46 +52,12 @@ class Produto(models.Model):
         return self.nome
 
 class Movimentacao(models.Model):
-    TIPO_CHOICES = (
-        ("entrada", "Entrada"),
-        ("saida", "Saída"),
-    )
-
-    id_movimentacao = models.AutoField(primary_key=True)
-
-    produto = models.ForeignKey(
-        Produto, on_delete=models.CASCADE, db_column="id_produto"
-    )
-
-    usuario = models.ForeignKey(
-        Usuario, on_delete=models.CASCADE, db_column="id_usuario"
-    )
-
-    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
-
-    quantidade = models.PositiveIntegerField() 
-
-    data_mov = models.DateField(default=date.today)
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    quantidade = models.IntegerField()
+    data = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "movimentacoes"
 
     def __str__(self):
-        return f"{self.produto.nome} - {self.tipo} ({self.quantidade})"
-
-    @transaction.atomic
-    def save(self, *args, **kwargs):
-        produto = Produto.objects.select_for_update().get(pk=self.produto.pk)
-
-        if self.tipo == "saida":
-            if produto.estoque_atual < self.quantidade:
-                raise ValueError("Estoque insuficiente")
-
-        super().save(*args, **kwargs)
-
-        if self.tipo == "entrada":
-            produto.estoque_atual += self.quantidade
-        else:
-            produto.estoque_atual -= self.quantidade
-
-        produto.save()
+        return f"{self.produto.nome} - {self.quantidade}"

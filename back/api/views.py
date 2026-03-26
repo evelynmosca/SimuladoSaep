@@ -39,6 +39,4 @@ class MovementRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     serializer_class = MovimentacaoSerializer
     permission_classes = [IsAuthenticated]
     lookup_field = "id_movimentacao"
-
-class LoginView(TokenObtainPairView):
-    pass
+    

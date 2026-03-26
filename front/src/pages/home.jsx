@@ -1,57 +1,54 @@
-import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/home.css";
-import axios from "axios";
 
-function Home() {
-  const [produtos, setProdutos] = useState([]);
-  const token = localStorage.getItem('token');
+export default function Home() {
+  const navigate = useNavigate();
+  const user = localStorage.getItem("user");
 
-  const carregarProdutos = async () => {
-    try {
-      const response = await axios.get(
-        'http://127.0.0.1:8000/api/produtos/',
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-
-      setProdutos(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+  const logout = () => {
+    localStorage.clear();
+    navigate("/");
   };
 
-  useEffect(() => {
-    carregarProdutos();
-  }, []);
-
   return (
-    <div className="content">
-      <h1>Produtos</h1>
+    <div className="home-container">
 
-      <table>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Preço</th>
-            <th>Estoque Atual</th>
-            <th>Estoque Mínimo</th>
-          </tr>
-        </thead>
+      <h2 className="home-title">Bem-vindo, {user}</h2>
 
-        <tbody>
-          {produtos.map((p) => (
-            <tr key={p.id}>
-              <td>{p.nome}</td>
-              <td>R$ {p.preco}</td>
-              <td>{p.estoque_atual}</td>
-              <td>{p.estoque_minimo}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* CARDS */}
+      <div className="home-cards">
+
+        <div className="home-card">
+          <h3>Produtos</h3>
+          <span>Gerencie os produtos cadastrados</span>
+
+          <div className="home-actions">
+            <button onClick={() => navigate("/produtos")}>
+              Acessar
+            </button>
+          </div>
+        </div>
+
+        <div className="home-card">
+          <h3>Estoque</h3>
+          <span>Controle entradas e saídas</span>
+
+          <div className="home-actions">
+            <button onClick={() => navigate("/estoque")}>
+              Acessar
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      {/* LOGOUT */}
+      <div className="home-actions">
+        <button className="logout-btn" onClick={logout}>
+          Logout
+        </button>
+      </div>
+
     </div>
   );
 }
-
-export default Home;

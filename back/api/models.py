@@ -54,12 +54,15 @@ class Produto(models.Model):
         return self.nome
 
 class Movimentacao(models.Model):
+    TIPO_CHOICES = [
+        ('entrada', 'Entrada'),
+        ('saida', 'Saída'),
+    ]
+
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
     quantidade = models.IntegerField()
     data = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "movimentacoes"
-
-    def __str__(self):
-        return f"{self.produto.nome} - {self.quantidade}"

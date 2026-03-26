@@ -1,17 +1,36 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/home";
+
 import Login from "./pages/login";
-import Movimentacao from "./pages/movimentacoes";
+import Home from "./pages/home";
 import Produtos from "./pages/produtos";
+import Estoque from "./pages/estoque";
+import PrivateRoute from "./routes/privateroute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/movimentacoes" element={<Movimentacao />} />
-        <Route path="/produtos" element={<Produtos />} />
+
+        <Route
+          path="/login"
+          element={<PrivateRoute><Login /></PrivateRoute>}
+        />
+
+        <Route
+          path="/home"
+          element={<PrivateRoute><Home /></PrivateRoute>}
+        />
+
+        <Route
+          path="/produtos"
+          element={<PrivateRoute><Produtos /></PrivateRoute>}
+        />
+
+        <Route
+          path="/estoque"
+          element={<PrivateRoute><Estoque /></PrivateRoute>}
+        />
       </Routes>
     </BrowserRouter>
   );

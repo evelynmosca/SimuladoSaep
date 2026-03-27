@@ -98,13 +98,9 @@ WSGI_APPLICATION = 'estoque.wsgi.application'
 # }
 
 DATABASES = {
-    'default':{
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'saep_db',
-        'USER': 'root',
-        'PASSWORD': 'senai',
-        'HOST': 'localhost',
-        'PORT': '3306',
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3',
     }
 }
 

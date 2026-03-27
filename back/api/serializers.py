@@ -22,7 +22,8 @@ class MovimentacaoSerializer(serializers.ModelSerializer):
             "id",
             "produto",
             "produto_nome",
+            "tipo", 
             "quantidade",
-            "data",
+            "data_mov",
         ]
-        read_only_fields = ["data"]
+        read_only_fields = ["data_mov"]

@@ -41,15 +41,13 @@ export default function Produtos() {
       return;
     }
 
-    if (Number(novo.preco) <= 0) {
-      alert("Preço inválido");
-      return;
-    }
-
     try {
       const payload = {
         nome: novo.nome,
-        preco: Number(novo.preco),
+        preco: parseFloat(novo.preco),
+        descricao: "",
+        estoque_atual: 0,
+        estoque_minimo: 0
       };
 
       if (editando) {
@@ -65,8 +63,8 @@ export default function Produtos() {
       carregar();
 
     } catch (error) {
-      console.log(error);
-      alert("Erro ao salvar produto");
+      console.error("Erro detalhado:", error.response?.data);
+      alert("Erro ao salvar produto. Verifique o console.");
     }
   };
 

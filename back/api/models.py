@@ -43,9 +43,9 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 class Produto(models.Model):
     nome = models.CharField(max_length=255)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
-    descricao = models.TextField()
-    estoque_atual = models.IntegerField()
-    estoque_minimo = models.IntegerField()
+    descricao = models.TextField(blank=True, null=True, default="")
+    estoque_atual = models.IntegerField(default=0)
+    estoque_minimo = models.IntegerField(default=0)
 
     class Meta:
         db_table = "produtos"
@@ -62,7 +62,7 @@ class Movimentacao(models.Model):
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
     quantidade = models.IntegerField()
-    data = models.DateTimeField(auto_now_add=True)
+    data_mov = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "movimentacoes"
